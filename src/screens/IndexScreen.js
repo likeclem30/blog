@@ -3,17 +3,22 @@ import { View, Text, StyleSheet, FlatList, Button, TouchableOpacity } from "reac
 import { Context } from "../context/BlogContext";
 import { Feather } from "@expo/vector-icons";
 
-const IndexScreen = () => {
-  const { state, addBlogPost , deleteBlogPost} = useContext(Context);
+const IndexScreen = ({navigation}) => {
+    //console.log(props);
+  const { state, deleteBlogPost} = useContext(Context);
 
   return (
+      
     <View>
-      <Button title="Add Post" onPress={addBlogPost} />
+     
       <FlatList
         data={state}
         keyExtractor={BlogPosts => BlogPosts.title}
         renderItem={({ item }) => {
           return (
+            <TouchableOpacity
+            onPress={() => navigation.navigate('Show', {id: item.id})}>
+
             <View style={styles.row}>
               <Text style={styles.title}>
                 {" "}
@@ -24,6 +29,7 @@ const IndexScreen = () => {
               <Feather style={styles.iocn} name="trash" />
               </TouchableOpacity>
             </View>
+            </TouchableOpacity>
           );
         }}
       />
@@ -31,6 +37,14 @@ const IndexScreen = () => {
   );
 };
 
+IndexScreen.navigationOptions = ({navigation}) => {
+    return {
+        headerRight: () => <TouchableOpacity
+        onPress={() => navigation.navigate('Create')}> 
+       <Feather  name="plus" style={styles.create} />
+        </TouchableOpacity> 
+    }
+}
 const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
@@ -45,6 +59,11 @@ const styles = StyleSheet.create({
   },
   iocn: {
     fontSize: 24
+  },
+  create:{
+      fontSize: 30,
+      marginRight: 5,
+      fontWeight: 'bold'
   }
 });
 
